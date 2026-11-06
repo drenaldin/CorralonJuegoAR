@@ -3,6 +3,7 @@ import { rpc } from './config.js?v=3';
 
 const CLAVE = 'muestra-utu-2026';
 const CLAVE_APODO = 'muestra-utu-2026-apodo';
+const CLAVE_JUGADOR = 'muestra-utu-2026-jugador';
 const app = document.getElementById('app');
 let almacen;
 try { almacen = window.localStorage; } catch { almacen = null; }
@@ -16,6 +17,16 @@ function leer() { try { return JSON.parse(almacen?.getItem(CLAVE)) || null; } ca
 function guardar() { try { almacen?.setItem(CLAVE, JSON.stringify(partida)); } catch { /* sin guardado */ } }
 const apodoGuardado = () => { try { return almacen?.getItem(CLAVE_APODO) || ''; } catch { return ''; } };
 const guardarApodo = a => { try { almacen?.setItem(CLAVE_APODO, a); } catch { /* sin guardado */ } };
+// Identificador de este celular: reserva el apodo para que nadie más lo use.
+function jugadorId() {
+  let id = null;
+  try { id = almacen?.getItem(CLAVE_JUGADOR); } catch { /* sin guardado */ }
+  if (!id) {
+    id = crypto.randomUUID?.() || String(Date.now()) + Math.random();
+    try { almacen?.setItem(CLAVE_JUGADOR, id); } catch { /* sin guardado */ }
+  }
+  return id;
+}
 const limpiarApodo = t => t.normalize('NFKC').replace(/\s+/g, ' ').trim().slice(0, 24);
 
 const segundos = () => partida ? Math.floor(((partida.fin || Date.now()) - partida.inicio) / 1000) : 0;
@@ -88,10 +99,20 @@ function formularioApodo(textoBoton, alListo) {
     el('label', { for: 'apodo' }, 'Tu apodo para el ranking'),
     input,
     el('button', { class: 'btn btn-amarillo', type: 'submit' }, textoBoton));
-  form.addEventListener('submit', e => {
+  const error = el('p', { class: 'error', role: 'alert', hidden: '' });
+  form.insertBefore(error, form.lastChild);
+  const boton = form.querySelector('button');
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const apodo = limpiarApodo(input.value);
     if (!apodo) return input.focus();
+    boton.disabled = true; error.hidden = true;
+    const textoBoton = boton.textContent; boton.textContent = 'Comprobando apodo…';
+    let r;
+    try { r = await rpc('reservar_apodo', { p_apodo: apodo, p_jugador: jugadorId() }); } catch { r = null; }
+    boton.disabled = false; boton.textContent = textoBoton;
+    if (!r) { error.textContent = 'No hay conexión. Revisá internet y probá de nuevo.'; error.hidden = false; return; }
+    if (!r.ok) { error.textContent = `«${apodo}» ya está en uso. Elegí otro apodo.`; error.hidden = false; input.select(); return; }
     guardarApodo(apodo);
     alListo(apodo);
   });
@@ -141,7 +162,7 @@ function finTutorial() {
         el('li', {}, `Cada pista tacha una opción incorrecta y resta ${PUNTOS_PISTA} puntos.`),
         el('li', {}, 'Si terminás rápido, ganás un bono de hasta 300 puntos.'),
         el('li', {}, 'Después de cada parada aparece una pista para encontrar el próximo QR.')),
-      el('button', { class: 'btn btn-amarillo btn-grande', type: 'button', onclick: () => empezarPartida(apodoGuardado() || 'Jugador') }, 'Comenzar el juego'),
+      el('button', { class: 'btn btn-amarillo btn-grande', type: 'button', onclick: () => apodoGuardado() ? empezarPartida(apodoGuardado()) : inicioJuego() }, 'Comenzar el juego'),
       el('button', { class: 'btn btn-borde', type: 'button', onclick: () => preguntar(0, 0) }, 'Practicar otra vez')));
 }
 
@@ -270,7 +291,8 @@ async function final() {
   } }, 'Reintentar envío');
   const nueva = el('button', { class: 'btn btn-borde', type: 'button', onclick: () => {
     if (!partida.enviada && !confirm('Tus puntos todavía no llegaron al ranking. ¿Empezar igual otra partida?')) return;
-    almacen?.removeItem(CLAVE); partida = null; portada('Para jugar de nuevo, escaneá el QR de la parada 1.');
+    try { almacen?.removeItem(CLAVE); almacen?.removeItem(CLAVE_APODO); } catch { /* sin guardado */ }
+    partida = null; portada('Para jugar de nuevo, escaneá el QR de la parada 1 y elegí un apodo nuevo: cada apodo se usa una sola vez.');
   } }, 'Jugar otra vez');
   function mostrarEnvio(ok) {
     estado.textContent = ok ? 'Tus puntos ya están en el ranking.' : 'No se pudo enviar. Revisá la conexión y tocá «Reintentar envío».';
