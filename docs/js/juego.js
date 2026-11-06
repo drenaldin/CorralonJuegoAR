@@ -1,5 +1,5 @@
-import { PARADAS, TUTORIAL, TOTAL_PREGUNTAS, PUNTOS_PISTA, calcularPuntos } from './paradas.js?v=2';
-import { API_URL } from './config.js?v=2';
+import { PARADAS, TUTORIAL, TOTAL_PREGUNTAS, PUNTOS_PISTA, calcularPuntos } from './paradas.js?v=3';
+import { rpc } from './config.js?v=3';
 
 const CLAVE = 'muestra-utu-2026';
 const CLAVE_APODO = 'muestra-utu-2026-apodo';
@@ -234,12 +234,7 @@ function mostrarPista(n, aviso) {
 async function enviar() {
   if (!partida.fin || partida.enviada) return true;
   try {
-    const r = await fetch(`${API_URL}/api/puntos`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: partida.id, apodo: partida.apodo, aciertos: partida.aciertos, pistas: partida.pistas, segundos: segundos() }),
-      signal: AbortSignal.timeout(10000)
-    });
-    if (!r.ok) throw new Error();
+    await rpc('registrar_puntos', { p_id: partida.id, p_apodo: partida.apodo, p_aciertos: partida.aciertos, p_pistas: partida.pistas, p_segundos: segundos() });
     partida.enviada = true; guardar();
     return true;
   } catch { return false; }

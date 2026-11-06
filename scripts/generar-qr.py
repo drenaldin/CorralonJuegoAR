@@ -7,7 +7,7 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 
-BASE = (sys.argv[1] if len(sys.argv) > 1 else 'https://drenaldin.github.io/corralon-qr/').rstrip('/') + '/'
+BASE = (sys.argv[1] if len(sys.argv) > 1 else 'https://drenaldin.github.io/CorralonJuegoAR/').rstrip('/') + '/'
 PARADAS = [  # (número, código, color, dónde se pega)
     (0, 'tu0r1a', '#064795', 'Stand de Deporte y Recreación (salón 6), en la entrada: tutorial, no corre el tiempo'),
     (1, 'dr6x2k', '#1C7F45', 'Stand de Deporte y Recreación (salón 6), al lado del Tutorial: arranca el tiempo'),

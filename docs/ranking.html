@@ -17,13 +17,13 @@
   <ol class="ranking grande" id="lista"></ol>
 </main>
 <script type="module">
-import { API_URL } from './js/config.js?v=2';
+import { rpc } from './js/config.js?v=3';
 const lista = document.getElementById('lista'), estado = document.getElementById('estado');
 const tiempo = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 async function cargar() {
   try {
-    const r = await fetch(`${API_URL}/api/ranking`, { cache: 'no-store' });
-    const { filas, total } = await r.json();
+    const filas = await rpc('ver_ranking');
+    const total = filas[0]?.total || 0;
     lista.replaceChildren(...filas.map(f => {
       const li = document.createElement('li');
       li.innerHTML = '<span class="nombre"></span><span class="det"></span><b></b>';
