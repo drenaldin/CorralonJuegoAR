@@ -119,12 +119,12 @@ function comoSeJuega(apodo) {
       el('p', {}, 'Son 5 paradas por la UTU. En cada una se repite lo mismo:')),
     el('div', { class: 'texto' },
       el('ol', { class: 'pasos' },
-        paso('verde', '1', 'Escaneá el QR', 'Con la cámara del celular, en el lugar de la parada. El de la parada 1 está acá, en el stand.'),
+        paso('verde', '1', 'Escaneá el QR', 'Con la cámara del celular, en el lugar de cada parada. La parada 1 empieza acá mismo, al terminar la práctica.'),
         paso('celeste', '2', 'Respondé 3 preguntas', 'De deporte y del cuerpo humano. Cada respuesta correcta suma 100 puntos.'),
         paso('naranja', '3', '¿Dudás? Pedí una pista', `El botón «Pista» tacha una opción incorrecta y resta ${PUNTOS_PISTA} puntos. Podés pedir varias.`),
         paso('rojo', '4', 'Leé la pista del lugar', 'Al terminar las 3 preguntas aparece un acertijo que te dice dónde está el próximo QR.'),
         paso('agua', '5', 'Buscalo y repetí', 'Así hasta la parada 5, que es volver al stand. Si terminás rápido, ganás un bono.')),
-      el('p', { class: 'nota-tiempo' }, 'Ahora vas a practicar con 3 preguntas. Acá no corre el tiempo ni suma puntos: el reloj arranca recién al escanear el QR de la parada 1.'),
+      el('p', { class: 'nota-tiempo' }, 'Ahora vas a practicar con 3 preguntas. Acá no corre el tiempo ni suma puntos: el reloj arranca recién cuando toques «Comenzar el juego».'),
       el('button', { class: 'btn btn-amarillo', type: 'button', onclick: () => preguntar(0, 0) }, 'Empezar la práctica')));
 }
 
@@ -133,7 +133,7 @@ function finTutorial() {
     el('section', { class: 'bloque azul' },
       el('p', { class: 'etiqueta' }, 'Tutorial terminado'),
       el('h1', {}, '¡Ya sabés jugar!'),
-      el('p', {}, 'Ahora escaneá el QR de la Parada 1. Desde ese momento corre el tiempo.')),
+      el('p', {}, 'Cuando estés listo, tocá «Comenzar el juego». Desde ese momento corre el tiempo y arrancás en la parada 1.')),
     el('div', { class: 'texto' },
       el('h2', {}, 'Recordá'),
       el('ul', { class: 'reglas' },
@@ -141,18 +141,20 @@ function finTutorial() {
         el('li', {}, `Cada pista tacha una opción incorrecta y resta ${PUNTOS_PISTA} puntos.`),
         el('li', {}, 'Si terminás rápido, ganás un bono de hasta 300 puntos.'),
         el('li', {}, 'Después de cada parada aparece una pista para encontrar el próximo QR.')),
+      el('button', { class: 'btn btn-amarillo btn-grande', type: 'button', onclick: () => empezarPartida(apodoGuardado() || 'Jugador') }, 'Comenzar el juego'),
       el('button', { class: 'btn btn-borde', type: 'button', onclick: () => preguntar(0, 0) }, 'Practicar otra vez')));
 }
 
+function empezarPartida(apodo) {
+  partida = { id: crypto.randomUUID?.() || String(Date.now()) + Math.random(), apodo, inicio: Date.now(), fin: null,
+    siguiente: 1, aciertos: 0, pistas: 0, respuestas: {}, tachadas: {}, enviada: false };
+  guardar();
+  arrancarReloj();
+  preguntar(1, 0);
+}
+
 function inicioJuego() {
-  const empezar = apodo => {
-    partida = { id: crypto.randomUUID?.() || String(Date.now()) + Math.random(), apodo, inicio: Date.now(), fin: null,
-      siguiente: 1, aciertos: 0, pistas: 0, respuestas: {}, tachadas: {}, enviada: false };
-    guardar();
-    arrancarReloj();
-    preguntar(1, 0);
-  };
-  const [form, input] = formularioApodo('Empezar (arranca el tiempo)', empezar);
+  const [form, input] = formularioApodo('Empezar (arranca el tiempo)', empezarPartida);
   pintar(
     el('section', { class: 'bloque verde' },
       el('p', { class: 'etiqueta' }, 'Parada 1 de 5'),

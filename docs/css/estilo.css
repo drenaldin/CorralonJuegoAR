@@ -96,3 +96,4 @@ input:focus{border-color:var(--azul);outline:none}
 .paso b{display:block;font-size:1.1rem;font-variation-settings:"wdth" 110}
 .paso p{color:var(--gris);font-size:.98rem}
 .nota-tiempo{background:var(--cemento);padding:12px 14px;font-weight:600}
+.btn-grande{font-size:1.3rem;min-height:68px;font-variation-settings:"wdth" 118}
