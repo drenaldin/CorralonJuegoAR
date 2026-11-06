@@ -17,7 +17,7 @@
   <ol class="ranking grande" id="lista"></ol>
 </main>
 <script type="module">
-import { rpc } from './js/config.js?v=3';
+import { rpc } from './js/config.js?v=4';
 const lista = document.getElementById('lista'), estado = document.getElementById('estado');
 const tiempo = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 async function cargar() {

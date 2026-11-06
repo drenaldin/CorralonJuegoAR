@@ -1,5 +1,5 @@
 import { PARADAS, TUTORIAL, TOTAL_PREGUNTAS, PUNTOS_PISTA, calcularPuntos } from './paradas.js?v=3';
-import { rpc } from './config.js?v=3';
+import { rpc } from './config.js?v=4';
 
 const CLAVE = 'muestra-utu-2026';
 const CLAVE_APODO = 'muestra-utu-2026-apodo';
@@ -189,7 +189,7 @@ function preguntar(n, i) {
   const practica = n === 0;
   const p = parada(n), q = p.preguntas[i];
   const clave = `${n}-${i}`;
-  let tachadas = practica ? [] : (partida.tachadas[clave] ||= []);
+  let tachadas = practica ? [] : (partida.tachadas[clave] = partida.tachadas[clave] || []);
   const lista = el('div', { class: 'opciones' });
   const despues = el('div', { class: 'despues' });
   const incorrectas = q.opciones.map((_, k) => k).filter(k => k !== q.correcta);
