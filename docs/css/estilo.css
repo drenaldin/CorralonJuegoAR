@@ -88,3 +88,11 @@ input:focus{border-color:var(--azul);outline:none}
 .btn-pista{background:transparent;color:var(--azul);box-shadow:inset 0 0 0 2px var(--azul);min-height:48px;font-size:1rem}
 .opcion.tachada{text-decoration:line-through;opacity:.35;background:transparent;border-style:dashed}
 .reglas{margin:0;padding-left:1.2em;display:grid;gap:6px}
+
+/* Cómo se juega */
+.pasos{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.paso{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.paso .num{width:44px;height:44px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.3rem;font-variation-settings:"wdth" 118}
+.paso b{display:block;font-size:1.1rem;font-variation-settings:"wdth" 110}
+.paso p{color:var(--gris);font-size:.98rem}
+.nota-tiempo{background:var(--cemento);padding:12px 14px;font-weight:600}

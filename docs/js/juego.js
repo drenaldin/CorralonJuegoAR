@@ -99,7 +99,7 @@ function formularioApodo(textoBoton, alListo) {
 }
 
 function inicioTutorial() {
-  const [form, input] = formularioApodo('Empezar la práctica', () => preguntar(0, 0));
+  const [form, input] = formularioApodo('Continuar', apodo => comoSeJuega(apodo));
   pintar(
     el('section', { class: 'bloque azul' },
       el('p', { class: 'etiqueta' }, 'Tutorial · Práctica'),
@@ -107,6 +107,25 @@ function inicioTutorial() {
       el('p', {}, 'Antes de jugar, probá con 3 preguntas de práctica. No corre el tiempo y no cuenta para el ranking.')),
     form);
   input.focus();
+}
+
+function comoSeJuega(apodo) {
+  const paso = (color, num, titulo, texto) =>
+    el('li', { class: 'paso' }, el('span', { class: `num ${color}` }, num), el('div', {}, el('b', {}, titulo), el('p', {}, texto)));
+  pintar(
+    el('section', { class: 'bloque azul' },
+      el('p', { class: 'etiqueta' }, `Hola, ${apodo}`),
+      el('h1', {}, 'Cómo se juega'),
+      el('p', {}, 'Son 5 paradas por la UTU. En cada una se repite lo mismo:')),
+    el('div', { class: 'texto' },
+      el('ol', { class: 'pasos' },
+        paso('verde', '1', 'Escaneá el QR', 'Con la cámara del celular, en el lugar de la parada. El de la parada 1 está acá, en el stand.'),
+        paso('celeste', '2', 'Respondé 3 preguntas', 'De deporte y del cuerpo humano. Cada respuesta correcta suma 100 puntos.'),
+        paso('naranja', '3', '¿Dudás? Pedí una pista', `El botón «Pista» tacha una opción incorrecta y resta ${PUNTOS_PISTA} puntos. Podés pedir varias.`),
+        paso('rojo', '4', 'Leé la pista del lugar', 'Al terminar las 3 preguntas aparece un acertijo que te dice dónde está el próximo QR.'),
+        paso('agua', '5', 'Buscalo y repetí', 'Así hasta la parada 5, que es volver al stand. Si terminás rápido, ganás un bono.')),
+      el('p', { class: 'nota-tiempo' }, 'Ahora vas a practicar con 3 preguntas. Acá no corre el tiempo ni suma puntos: el reloj arranca recién al escanear el QR de la parada 1.'),
+      el('button', { class: 'btn btn-amarillo', type: 'button', onclick: () => preguntar(0, 0) }, 'Empezar la práctica')));
 }
 
 function finTutorial() {
