@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ranking · Muestra Anual 2026 · UTU San Marcos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/estilo.css?v=2">
+</head>
+<body class="pantalla">
+<header class="barra"><div class="wrap barra-in"><p class="marca"><b>UTU San Marcos</b><span>Muestra Anual 2026</span></p></div>
+<ol class="franjas"><li class="verde"></li><li class="celeste"></li><li class="naranja"></li><li class="rojo"></li><li class="agua"></li></ol></header>
+<main class="wrap">
+  <h1 class="titulo">Ranking de la búsqueda</h1>
+  <p class="bajada" id="estado">Cargando…</p>
+  <ol class="ranking grande" id="lista"></ol>
+</main>
+<script type="module">
+import { API_URL } from './js/config.js?v=2';
+const lista = document.getElementById('lista'), estado = document.getElementById('estado');
+const tiempo = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+async function cargar() {
+  try {
+    const r = await fetch(`${API_URL}/api/ranking`, { cache: 'no-store' });
+    const { filas, total } = await r.json();
+    lista.replaceChildren(...filas.map(f => {
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="nombre"></span><span class="det"></span><b></b>';
+      li.querySelector('.nombre').textContent = f.apodo;
+      li.querySelector('.det').textContent = `${f.aciertos}/15 · ${f.pistas} ${f.pistas === 1 ? "pista" : "pistas"} · ${tiempo(f.segundos)}`;
+      li.querySelector('b').textContent = f.puntos;
+      return li;
+    }));
+    estado.textContent = total ? `${total} ${total === 1 ? "partida terminada" : "partidas terminadas"}. Se actualiza solo.` : 'Todavía nadie terminó. ¡Escaneá el QR y jugá!';
+  } catch { estado.textContent = 'Sin conexión con el ranking. Reintentando…'; }
+}
+cargar(); setInterval(cargar, 10000);
+</script>
+</body>
+</html>

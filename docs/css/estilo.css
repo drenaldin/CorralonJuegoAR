@@ -1,0 +1,90 @@
+/* Mismo sistema visual que el sitio de la UTU San Marcos: azul UTU de base,
+   un color plano por parada, Archivo con títulos en ancho expandido, sin sombras. */
+:root{
+  --azul:#064795;--azul-hondo:#04306A;--tinta:#18212E;--gris:#5A6472;--cemento:#EEF0F2;--papel:#FFFFFF;--linea:#D5DAE0;
+  --rojo:#C8242B;--amarillo:#F4B400;--verde:#1C7F45;--celeste:#0072B1;--agua:#0F7C86;--naranja:#B4531A;
+  --f:"Archivo","Arial Narrow",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cemento);color:var(--tinta);font-family:var(--f);font-size:18px;line-height:1.5;min-height:100dvh;display:flex;flex-direction:column}
+h1,h2{margin:0;font-weight:800;line-height:1.05;font-variation-settings:"wdth" 118;text-wrap:balance}
+h1{font-size:clamp(2rem,8vw,3.4rem)}
+h2{font-size:1.5rem}
+p{margin:0}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--amarillo);outline-offset:3px}
+.wrap{width:100%;max-width:640px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+main{flex:1;padding-block:20px 32px;outline:none}
+
+/* Encabezado */
+.barra{background:var(--azul);color:#fff;position:sticky;top:0;z-index:5}
+.barra-in{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:12px}
+.marca{display:flex;flex-direction:column;line-height:1.1}
+.marca b{font-size:1.1rem;font-weight:800;font-variation-settings:"wdth" 118;letter-spacing:.01em;text-transform:uppercase}
+.marca span{font-size:.85rem;opacity:.85}
+.marcador{display:flex;gap:16px;text-align:right}
+.marcador span{display:flex;flex-direction:column;line-height:1.1}
+.marcador small{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
+.marcador b{font-size:1.3rem;font-variant-numeric:tabular-nums;font-variation-settings:"wdth" 110}
+.franjas{display:grid;grid-template-columns:repeat(5,1fr);margin:0;padding:0;list-style:none;height:8px}
+.franjas li{opacity:.3}
+.franjas li.hecha{opacity:1}
+.pantalla .franjas li{opacity:1}
+
+/* Colores planos */
+.verde{background:var(--verde)}.celeste{background:var(--celeste)}.naranja{background:var(--naranja)}
+.azul{background:var(--azul)}.rojo{background:var(--rojo)}.agua{background:var(--agua)}.amarillo{background:var(--amarillo)}
+
+/* Bloque de color con texto centrado */
+.bloque{color:#fff;text-align:center;padding:36px 22px;display:grid;gap:14px}
+.bloque.amarillo{color:var(--tinta)}
+.etiqueta{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.9}
+.pregunta{font-size:clamp(1.6rem,6.5vw,2.4rem)}
+.pista{font-size:clamp(1.4rem,5.6vw,2rem);line-height:1.2}
+
+.texto{background:var(--papel);padding:22px;display:grid;gap:16px}
+.aviso{background:var(--amarillo);color:var(--tinta);font-weight:700;padding:14px 18px}
+
+/* Botones */
+.btn{display:flex;justify-content:center;align-items:center;font:700 1.05rem var(--f);font-variation-settings:"wdth" 110;padding:16px 22px;border:0;border-radius:2px;cursor:pointer;text-decoration:none;min-height:54px}
+.btn-azul{background:var(--azul);color:#fff}
+.btn-amarillo{background:var(--amarillo);color:var(--tinta)}
+.btn-borde{background:transparent;color:var(--tinta);box-shadow:inset 0 0 0 2px currentColor}
+
+/* Opciones */
+.opciones{display:grid;gap:10px}
+.opcion{font:600 1.1rem var(--f);text-align:left;padding:16px 18px;min-height:58px;background:var(--cemento);color:var(--tinta);border:2px solid var(--linea);border-radius:2px;cursor:pointer}
+.opcion:disabled{cursor:default;opacity:.55}
+.opcion.bien{background:var(--verde);border-color:var(--verde);color:#fff;opacity:1}
+.opcion.mal{background:var(--rojo);border-color:var(--rojo);color:#fff;opacity:1}
+.despues{display:grid;gap:12px}
+.despues:empty{display:none}
+.res{font-size:1.4rem;font-weight:800;font-variation-settings:"wdth" 115}
+.res.bien{color:var(--verde)}.res.mal{color:var(--rojo)}
+
+/* Formulario */
+label{font-weight:700}
+input{font:500 1.2rem var(--f);padding:14px;border:2px solid var(--linea);border-radius:2px;width:100%}
+input:focus{border-color:var(--azul);outline:none}
+
+/* Ranking */
+.titulo{margin-top:12px}
+.bajada{color:var(--gris);margin:8px 0 18px}
+.ranking{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:pos}
+.ranking li{counter-increment:pos;display:grid;grid-template-columns:2.4em 1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;background:var(--papel);padding:12px 16px}
+.ranking li::before{content:counter(pos);grid-row:span 2;font-weight:800;font-size:1.4rem;color:var(--azul);font-variation-settings:"wdth" 118}
+.ranking li:nth-child(1){background:var(--amarillo)}
+.ranking li:nth-child(2){background:#dfe6ee}
+.ranking li:nth-child(3){background:#f0dfcf}
+.ranking .nombre{font-weight:700}
+.ranking .det{grid-column:2;color:var(--gris);font-size:.85rem}
+.ranking b{grid-column:3;grid-row:1 / span 2;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.pantalla .wrap{max-width:900px}
+.pantalla .grande li{font-size:1.25rem}
+
+.pie{background:var(--azul-hondo);color:#fff;font-size:.85rem;padding-block:14px;text-align:center;opacity:.95}
+
+/* Pista: tacha opciones incorrectas */
+.btn-pista{background:transparent;color:var(--azul);box-shadow:inset 0 0 0 2px var(--azul);min-height:48px;font-size:1rem}
+.opcion.tachada{text-decoration:line-through;opacity:.35;background:transparent;border-style:dashed}
+.reglas{margin:0;padding-left:1.2em;display:grid;gap:6px}
